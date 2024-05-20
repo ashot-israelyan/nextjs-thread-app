@@ -58,7 +58,6 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     const blob = values.profile_photo;
 
     const hasImageChanged = isBase64Image(blob);
-
     if (hasImageChanged) {
       const imgRes = await startUpload(files);
 
@@ -67,14 +66,14 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
       }
     }
 
-    await updateUser(
-      values.username,
-      values.name,
-      values.bio,
-      values.profile_photo,
-      user.id,
-      pathname
-    );
+    await updateUser({
+      name: values.name,
+      path: pathname,
+      username: values.username,
+      userId: user.id,
+      bio: values.bio,
+      image: values.profile_photo,
+    });
 
     if (pathname === "/profile/edit") {
       router.back();
