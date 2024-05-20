@@ -50,6 +50,7 @@ export const POST = async (request: Request) => {
 			heads as IncomingHttpHeaders & WebhookRequiredHeaders
 		) as Event;
 	} catch (err) {
+		console.log(err);
 		return NextResponse.json({ message: err }, { status: 400 });
 	}
 
