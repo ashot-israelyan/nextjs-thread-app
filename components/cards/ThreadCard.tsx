@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { FC } from "react";
-import DeleteThread from "../forms/DeleteThread";
+
 import { formatDateString } from "@/lib/utils";
+import DeleteThread from "../forms/DeleteThread";
 
 interface Props {
   id: string;
@@ -28,7 +28,7 @@ interface Props {
   isComment?: boolean;
 }
 
-const ThreadCard: FC<Props> = ({
+function ThreadCard({
   id,
   currentUserId,
   parentId,
@@ -38,7 +38,7 @@ const ThreadCard: FC<Props> = ({
   createdAt,
   comments,
   isComment,
-}) => {
+}: Props) {
   return (
     <article
       className={`flex w-full flex-col rounded-xl ${
@@ -51,7 +51,7 @@ const ThreadCard: FC<Props> = ({
             <Link href={`/profile/${author.id}`} className="relative h-11 w-11">
               <Image
                 src={author.image}
-                alt="Profile Image"
+                alt="user_community_image"
                 fill
                 className="cursor-pointer rounded-full"
               />
@@ -106,7 +106,7 @@ const ThreadCard: FC<Props> = ({
               {isComment && comments.length > 0 && (
                 <Link href={`/thread/${id}`}>
                   <p className="mt-1 text-subtle-medium text-gray-1">
-                    {comments.length} replies
+                    {comments.length} repl{comments.length > 1 ? "ies" : "y"}
                   </p>
                 </Link>
               )}
@@ -138,8 +138,7 @@ const ThreadCard: FC<Props> = ({
 
           <Link href={`/thread/${id}`}>
             <p className="mt-1 text-subtle-medium text-gray-1">
-              {comments.length}
-              repl{comments.length > 1 ? "ies" : "y"}
+              {comments.length} repl{comments.length > 1 ? "ies" : "y"}
             </p>
           </Link>
         </div>
@@ -166,6 +165,6 @@ const ThreadCard: FC<Props> = ({
       )}
     </article>
   );
-};
+}
 
 export default ThreadCard;

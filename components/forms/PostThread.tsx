@@ -2,11 +2,10 @@
 
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { usePathname, useRouter } from "next/navigation";
-import { FC } from "react";
+import { useOrganization } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePathname, useRouter } from "next/navigation";
 
-import { ThreadValidation } from "@/lib/validations/thread";
 import {
   Form,
   FormControl,
@@ -14,14 +13,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+
+import { ThreadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
 
-const PostThread: FC<{ userId: string }> = ({ userId }) => {
+interface Props {
+  userId: string;
+}
+
+function PostThread({ userId }: Props) {
   const router = useRouter();
   const pathname = usePathname();
+
+  const { organization } = useOrganization();
 
   const form = useForm<z.infer<typeof ThreadValidation>>({
     resolver: zodResolver(ThreadValidation),
@@ -34,8 +41,8 @@ const PostThread: FC<{ userId: string }> = ({ userId }) => {
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
     await createThread({
       text: values.thread,
-      author: values.accountId,
-      communityId: null,
+      author: userId,
+      communityId: organization ? organization.id : null,
       path: pathname,
     });
 
@@ -70,6 +77,6 @@ const PostThread: FC<{ userId: string }> = ({ userId }) => {
       </form>
     </Form>
   );
-};
+}
 
 export default PostThread;
